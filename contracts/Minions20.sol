@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Minions20 is ERC721, Ownable {
+contract SimpleNftLowerGas is ERC721, Ownable {
     using Strings for uint256;
     using Counters for Counters.Counter;
 
@@ -139,5 +139,22 @@ contract Minions20 is ERC721, Ownable {
 
     function setPaused(bool _state) public onlyOwner {
         paused = _state;
+    }
+
+    function withdraw() public onlyOwner {
+        // This will transfer the remaining contract balance to the owner.
+        (bool os, ) = payable(owner()).call{value: address(this).balance}("");
+        require(os);
+    }
+
+    function _mintLoop(address _receiver, uint256 _mintAmount) internal {
+        for (uint256 i = 0; i < _mintAmount; i++) {
+            supply.increment();
+            _safeMint(_receiver, supply.current());
+        }
+    }
+
+    function _baseURI() internal view virtual override returns (string memory) {
+        return uriPrefix;
     }
 }
