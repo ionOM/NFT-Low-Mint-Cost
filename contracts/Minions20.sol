@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract SimpleNftLowerGas is ERC721, Ownable {
+contract Minions20 is ERC721, Ownable {
     using Strings for uint256;
     using Counters for Counters.Counter;
 
@@ -20,7 +20,7 @@ contract SimpleNftLowerGas is ERC721, Ownable {
     string public hiddenMetadataUri;
 
     // The cost in ether to mint one token.
-    uint256 public cost = 0.01 ether;
+    uint256 public cost = 0.001 ether;
     // The maximum number of tokens that can be minted.
     uint256 public maxSupply = 20;
     // The maximum number of tokens that can be minted per transaction.
@@ -32,8 +32,10 @@ contract SimpleNftLowerGas is ERC721, Ownable {
     bool public revealed = false;
 
     // Constructor function that sets the initial value for the hidden metadata URI.
-    constructor() ERC721("NAME", "SYMBOL") {
-        setHiddenMetadataUri("ipfs://__CID__/hidden.json");
+    constructor() ERC721("Minions20", "MNS") {
+        setHiddenMetadataUri(
+            "ipfs://QmQHaueutqR4M59pHUYL6FAVEFWPJYrn2zzc4avAfCQcR6/hidden.json"
+        );
     }
 
     // Modifier function to check the minting compliance.
@@ -72,7 +74,7 @@ contract SimpleNftLowerGas is ERC721, Ownable {
         _mintLoop(_receiver, _mintAmount);
     }
 
-    // Function to get the token IDs owned by an address.
+    // Function to get the token IDs owned by an address. Returns an array of the token ids that someone owns.
     function walletOfOwner(
         address _owner
     ) public view returns (uint256[] memory) {
@@ -129,7 +131,7 @@ contract SimpleNftLowerGas is ERC721, Ownable {
         revealed = _state;
     }
 
-    // This function allows the owner to set the cost of minting a token
+    // This function allows the owner to set the cost of minting a token. Provide _cost in wei amount.
     function setCost(uint256 _cost) public onlyOwner {
         cost = _cost;
     }
